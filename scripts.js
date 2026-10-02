@@ -13,6 +13,7 @@ function multiply(a, b) {
 function divide(a, b) {
   if (b === 0) {
     alert("Cannot divide by zero");
+    return "";
   }
 
   return a / b;
@@ -37,25 +38,63 @@ const display = document.querySelector("#display");
 let firstNumber = "";
 let secondNumber = "";
 let currentOperator = "";
+let waitingforSecondNum = false;
 
 const cache = document.querySelector("#cache");
-
-function updateDisplay(value) {
-  display.textContent = value || "0";
-}
 
 const numbers = document.querySelectorAll("[data-value]");
 numbers.forEach((number) => number.addEventListener("click", activate));
 const operators = document.querySelectorAll("[data-operator]");
 operators.forEach((operator) => operator.addEventListener("click", activateop));
 function activate(e) {
-  firstNumber += e.target.textContent;
-  console.log(firstNumber);
-  display.textContent = firstNumber;
+  if (waitingforSecondNum) {
+    secondNumber += e.target.textContent;
+    display.textContent = secondNumber;
+  } else {
+    firstNumber += e.target.textContent;
+    display.textContent = firstNumber;
+  }
 }
 function activateop(e) {
+  if (!firstNumber) {
+    return;
+  }
+
   currentOperator = e.target.textContent;
-  console.log(currentOperator);
-  cache.textContent = firstNumber + currentOperator;
+  cache.textContent = `${firstNumber} ${currentOperator}`;
+  waitingforSecondNum = true;
+}
+const equals = document.getElementById("equals");
+equals.addEventListener("click", calculate);
+
+function calculate() {
+  if (!firstNumber || !secondNumber || !currentOperator) {
+    return;
+  }
+
+  const num1 = Number(firstNumber);
+  const num2 = Number(secondNumber);
+  let result = operate(currentOperator, num1, num2);
+
+  if (typeof result === "number" && !Number.isInteger(result)) {
+    result = Number(result.toFixed(4));
+  }
+
+  display.textContent = result;
+  cache.textContent = `${num1} ${currentOperator} ${num2} =`;
+
+  firstNumber = String(result);
+  secondNumber = "";
+  currentOperator = "";
+  waitingforSecondNum = false;
+}
+const clear = document.getElementById("clear");
+clear.addEventListener("click", clearAll);
+function clearAll() {
+  display.textContent = "0";
   firstNumber = "";
+  secondNumber = "";
+  currentOperator = "";
+  waitingforSecondNum = false;
+  cache.textContent = "";
 }
