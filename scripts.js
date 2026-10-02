@@ -175,3 +175,40 @@ function eraseLast() {
     display.textContent = firstNumber || "0";
   }
 }
+document.addEventListener("keydown", handleKeyboard);
+
+function handleKeyboard(event) {
+  const key = event.key;
+
+  if (/^\d$/.test(key) || key === ".") {
+    event.preventDefault();
+    activate({ target: { textContent: key } });
+    return;
+  }
+
+  const operator = key === "x" || key === "X" ? "*" : key;
+
+  if (["+", "-", "*", "/"].includes(operator)) {
+    event.preventDefault();
+    activateop({
+      currentTarget: {
+        dataset: { operator },
+      },
+    });
+    return;
+  }
+
+  if (key === "Enter" || key === "=") {
+    event.preventDefault();
+    calculate();
+  } else if (key === "Backspace") {
+    event.preventDefault();
+    eraseLast();
+  } else if (key === "Escape" || key === "Delete") {
+    event.preventDefault();
+    clearAll();
+  } else if (key === "%") {
+    event.preventDefault();
+    convertToPercent();
+  }
+}
