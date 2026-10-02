@@ -8,28 +8,42 @@
   </head>
   <body>
     <main class="calculator">
-      <output id="cache" aria-live="polite" >0</output>
-      <output id="display" aria-live="polite">0</output>
+      <div class="display-panel">
+        <output id="cache" aria-live="polite"></output>
+        <output id="display" aria-live="polite">0</output>
+        <button
+          type="button"
+          id="erase"
+          class="erase-button"
+          aria-label="Erase last digit"
+        >
+          ⌫
+        </button>
+      </div>
       <div class="keypad">
+        <button type="button" id="clear" data-action="clear">C</button>
+        <button type="button" data-action="sign">+/-</button>
+        <button type="button" data-action="percent">%</button>
+        <button type="button" data-operator="/">÷</button>
+
         <button type="button" data-value="7">7</button>
         <button type="button" data-value="8">8</button>
         <button type="button" data-value="9">9</button>
-        <button type="button" data-operator="/">/</button>
+        <button type="button" data-operator="*">×</button>
 
         <button type="button" data-value="4">4</button>
         <button type="button" data-value="5">5</button>
         <button type="button" data-value="6">6</button>
-        <button type="button" data-operator="*">*</button>
+        <button type="button" data-operator="-">−</button>
 
         <button type="button" data-value="1">1</button>
         <button type="button" data-value="2">2</button>
         <button type="button" data-value="3">3</button>
-        <button type="button" data-operator="-">-</button>
-
-        <button type="button" data-value="0">0</button>
-        <button type="button" id="clear">Clear</button>
-        <button type="button" id="equals">=</button>
         <button type="button" data-operator="+">+</button>
+
+        <button type="button" data-value="0" class="wide">0</button>
+        <button type="button" data-value=".">.</button>
+        <button type="button" id="equals" data-action="equals">=</button>
       </div>
     </main>
     <script src="scripts.js"></script>

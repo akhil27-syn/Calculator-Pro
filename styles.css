@@ -1,8 +1,8 @@
 :root {
-  color-scheme: light;
-  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-  background: #e8edf2;
-  color: #17212b;
+  color-scheme: dark;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #d3d3d1;
+  color: #eeeeee;
 }
 
 * {
@@ -15,44 +15,70 @@ body {
   display: grid;
   place-items: center;
   padding: 24px;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(255, 255, 255, 0.9),
-      transparent 34%
-    ),
-    linear-gradient(145deg, #e8edf2 0%, #cbd5df 100%);
+  background: #d3d3d1;
 }
 
 .calculator {
-  width: min(100%, 360px);
-  padding: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 24px;
-  background: #f8fafb;
-  box-shadow: 0 22px 50px rgba(34, 49, 63, 0.18);
+  width: min(100%, 390px);
+  padding: 22px 18px 24px;
+  border-radius: 34px;
+  background: #111214;
+}
+
+.display-panel {
+  position: relative;
+  min-height: 190px;
+  margin-bottom: 12px;
+  padding: 28px 8px 14px;
+  overflow: hidden;
+  background: #111214;
+}
+
+#cache {
+  display: block;
+  width: 100%;
+  min-height: 24px;
+  overflow: hidden;
+  color: #858585;
+  font-size: 1rem;
+  text-align: right;
+  white-space: nowrap;
 }
 
 #display {
   display: block;
   width: 100%;
-  min-height: 76px;
-  margin-bottom: 18px;
-  padding: 14px 16px;
+  padding-top: 4px;
   overflow: hidden;
-  border-radius: 14px;
-  background: #17212b;
-  color: #f8fafb;
-  font-size: clamp(2rem, 10vw, 3rem);
+  color: #eeeeee;
+  font-size: clamp(3.2rem, 15vw, 5rem);
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
 }
 
+.erase-button {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  min-height: auto;
+  padding: 4px 8px;
+  background: transparent;
+  color: #858585;
+  font-size: 1rem;
+}
+
+.erase-button:hover {
+  background: transparent;
+  color: #eeeeee;
+  box-shadow: none;
+  transform: none;
+}
+
 .keypad {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .keypad br {
@@ -60,25 +86,23 @@ body {
 }
 
 button {
-  min-height: 58px;
+  min-height: 0;
+  aspect-ratio: 1;
   border: 0;
-  border-radius: 14px;
-  background: #e2e8ed;
-  color: #17212b;
+  border-radius: 50%;
+  background: #3d3e40;
+  color: #eeeeee;
   cursor: pointer;
   font: inherit;
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.55rem;
+  font-weight: 400;
   transition:
-    transform 120ms ease,
-    background 120ms ease,
-    box-shadow 120ms ease;
+    transform 100ms ease,
+    background 100ms ease;
 }
 
 button:hover {
-  background: #d3dde5;
-  box-shadow: 0 5px 12px rgba(34, 49, 63, 0.12);
-  transform: translateY(-2px);
+  background: #48494b;
 }
 
 button:active {
@@ -86,36 +110,57 @@ button:active {
 }
 
 button:focus-visible {
-  outline: 3px solid #f4a261;
+  outline: 3px solid #b9824d;
   outline-offset: 3px;
 }
 
 [data-operator] {
-  background: #f4a261;
-  color: #3b2110;
+  background: #b9783f;
+  color: #f7f7f7;
 }
 
 [data-operator]:hover {
-  background: #ee934b;
+  background: #c08750;
+}
+
+.wide {
+  grid-column: span 2;
+  aspect-ratio: auto;
+  border-radius: 999px;
+  text-align: left;
+  padding-left: 26px;
+}
+
+[data-action="sign"],
+[data-action="percent"],
+[data-action="equals"] {
+  background: #898a8b;
+  color: #171819;
 }
 
 [data-action="equals"] {
-  background: #2a9d8f;
-  color: #ffffff;
+  background: #b9783f;
+  color: #f7f7f7;
+}
+
+[data-action="sign"]:hover,
+[data-action="percent"]:hover,
+[data-action="equals"]:hover {
+  background: #999a9b;
 }
 
 [data-action="equals"]:hover {
-  background: #238b7e;
+  background: #c08750;
 }
 
 [data-action="clear"] {
-  background: #e76f51;
-  color: #ffffff;
-  font-size: 1rem;
+  background: #898a8b;
+  color: #171819;
 }
 
 [data-action="clear"]:hover {
-  background: #d95f41;
+  background: #999a9b;
+  color: #171819;
 }
 
 @media (max-width: 380px) {
@@ -124,10 +169,10 @@ button:focus-visible {
   }
 
   .calculator {
-    padding: 16px;
+    padding: 18px 14px 20px;
   }
 
   button {
-    min-height: 54px;
+    font-size: 1.3rem;
   }
 }

@@ -13,7 +13,7 @@ function multiply(a, b) {
 function divide(a, b) {
   if (b === 0) {
     alert("Cannot divide by zero");
-    return "";
+    return null;
   }
 
   return a / b;
@@ -39,6 +39,7 @@ let firstNumber = "";
 let secondNumber = "";
 let currentOperator = "";
 let waitingforSecondNum = false;
+let justCalculated = false;
 
 const cache = document.querySelector("#cache");
 
@@ -46,12 +47,25 @@ const numbers = document.querySelectorAll("[data-value]");
 numbers.forEach((number) => number.addEventListener("click", activate));
 const operators = document.querySelectorAll("[data-operator]");
 operators.forEach((operator) => operator.addEventListener("click", activateop));
+const actions = document.querySelectorAll("[data-action]");
+actions.forEach((action) => action.addEventListener("click", handleAction));
 function activate(e) {
+  const value = e.target.textContent;
+  const currentNumber = waitingforSecondNum ? secondNumber : firstNumber;
+
+  if (value === "." && currentNumber.includes(".")) {
+    return;
+  }
+
   if (waitingforSecondNum) {
-    secondNumber += e.target.textContent;
+    secondNumber += secondNumber === "" && value === "." ? "0." : value;
     display.textContent = secondNumber;
+  } else if (justCalculated) {
+    firstNumber = value === "." ? "0." : value;
+    justCalculated = false;
+    display.textContent = firstNumber;
   } else {
-    firstNumber += e.target.textContent;
+    firstNumber += firstNumber === "" && value === "." ? "0." : value;
     display.textContent = firstNumber;
   }
 }
@@ -60,12 +74,51 @@ function activateop(e) {
     return;
   }
 
-  currentOperator = e.target.textContent;
-  cache.textContent = `${firstNumber} ${currentOperator}`;
+  currentOperator = e.currentTarget.dataset.operator;
+  const visibleOperator =
+    currentOperator === "*"
+      ? "×"
+      : currentOperator === "/"
+        ? "÷"
+        : currentOperator;
+  cache.textContent = `${firstNumber} ${visibleOperator}`;
   waitingforSecondNum = true;
+  justCalculated = false;
 }
-const equals = document.getElementById("equals");
-equals.addEventListener("click", calculate);
+
+function handleAction(e) {
+  const action = e.currentTarget.dataset.action;
+
+  if (action === "clear") {
+    clearAll();
+  } else if (action === "equals") {
+    calculate();
+  } else if (action === "sign") {
+    toggleSign();
+  } else if (action === "percent") {
+    convertToPercent();
+  }
+}
+
+function toggleSign() {
+  if (waitingforSecondNum && secondNumber) {
+    secondNumber = String(Number(secondNumber) * -1);
+    display.textContent = secondNumber;
+  } else if (firstNumber) {
+    firstNumber = String(Number(firstNumber) * -1);
+    display.textContent = firstNumber;
+  }
+}
+
+function convertToPercent() {
+  if (waitingforSecondNum && secondNumber) {
+    secondNumber = String(Number(secondNumber) / 100);
+    display.textContent = secondNumber;
+  } else if (firstNumber) {
+    firstNumber = String(Number(firstNumber) / 100);
+    display.textContent = firstNumber;
+  }
+}
 
 function calculate() {
   if (!firstNumber || !secondNumber || !currentOperator) {
@@ -76,20 +129,29 @@ function calculate() {
   const num2 = Number(secondNumber);
   let result = operate(currentOperator, num1, num2);
 
+  if (result === null) {
+    return;
+  }
+
   if (typeof result === "number" && !Number.isInteger(result)) {
     result = Number(result.toFixed(4));
   }
 
   display.textContent = result;
-  cache.textContent = `${num1} ${currentOperator} ${num2} =`;
+  const visibleOperator =
+    currentOperator === "*"
+      ? "×"
+      : currentOperator === "/"
+        ? "÷"
+        : currentOperator;
+  cache.textContent = `${num1} ${visibleOperator} ${num2} =`;
 
   firstNumber = String(result);
   secondNumber = "";
   currentOperator = "";
   waitingforSecondNum = false;
+  justCalculated = true;
 }
-const clear = document.getElementById("clear");
-clear.addEventListener("click", clearAll);
 function clearAll() {
   display.textContent = "0";
   firstNumber = "";
@@ -97,4 +159,19 @@ function clearAll() {
   currentOperator = "";
   waitingforSecondNum = false;
   cache.textContent = "";
+  justCalculated = false;
+}
+
+const erase = document.getElementById("erase");
+erase.addEventListener("click", eraseLast);
+
+function eraseLast() {
+  if (waitingforSecondNum) {
+    secondNumber = secondNumber.slice(0, -1);
+    display.textContent = secondNumber || "0";
+  } else {
+    firstNumber = firstNumber.slice(0, -1);
+    justCalculated = false;
+    display.textContent = firstNumber || "0";
+  }
 }
